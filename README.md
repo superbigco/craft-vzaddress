@@ -180,10 +180,4 @@ VZ Address makes available an array of all countries indexed by their country co
         {% endfor %}
     </select>
 
-## VZ Address Roadmap
-
-Some things to do, and ideas for potential features:
-
-* Release it
-
 Brought to you by [Superbig](https://superbig.co)
