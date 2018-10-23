@@ -1,0 +1,43 @@
+{
+    "name": "superbig/craft-vzaddress",
+    "description": "A simple address field for Craft.",
+    "type": "craft-plugin",
+    "version": "2.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "vz address"
+    ],
+    "support": {
+        "docs": "https://github.com/superbigco/craft-vzaddress/blob/master/README.md",
+        "issues": "https://github.com/superbigco/craft-vzaddress/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Superbig",
+            "homepage": "https://superbig.co"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "superbig\\vzaddress\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "VZ Address",
+        "handle": "vz-address",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/superbigco/craft-vzaddress/master/CHANGELOG.md",
+        "components": {
+            "vzAddressService": "superbig\\vzaddress\\services\\VzAddressService"
+        },
+        "class": "superbig\\vzaddress\\VzAddress"
+    }
+}

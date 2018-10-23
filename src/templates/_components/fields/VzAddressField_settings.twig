@@ -1,0 +1,31 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * VZ Address plugin for Craft CMS
+ *
+ * VzAddressField Field Settings
+ *
+ * @author    Superbig
+ * @copyright Copyright (c) 2018 Superbig
+ * @link      https://superbig.co
+ * @package   VzAddress
+ * @since     2.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("superbig\\vzaddress\\assetbundles\\vzaddress\\VzAddressAsset") %}
+
+{{ forms.lightswitchField({
+    label:      'Show "Name" field'|t,
+    name:       'showName',
+    on:         field.showName
+}) }}
+
+{{ forms.selectField({
+    label:      'Default country',
+    name:       'defaultCountry',
+    value:      field.defaultCountry,
+    options:    countries
+}) }}

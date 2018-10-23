@@ -1,0 +1,28 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * VZ Address plugin for Craft CMS 3.x
+ *
+ * VZ Address Settings.twig
+ *
+ * @author    Superbig
+ * @copyright Copyright (c) 2018 Superbig
+ * @link      https://superbig.co
+ * @package   VzAddress
+ * @since     2.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("superbig\\vzaddress\\assetbundles\\vzaddress\\VzAddressAsset") %}
+
+{{ forms.textField({
+    first:        true,
+    label:        "Google API Key"|t,
+    instructions: 'An API key is required for any new implementation of Google Maps. You will need to <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#key" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.'|t,
+    id:           'googleApiKey',
+    name:         'googleApiKey',
+    value:        settings.googleApiKey,
+    errors:       settings.getErrors('googleApiKey')
+}) }}
