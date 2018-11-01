@@ -83,7 +83,9 @@ class VzAddressField extends Field
      */
     public function normalizeValue($value, ElementInterface $element = null)
     {
-        $value = Json::decodeIfJson($value);
+        if ($value) {
+            $value = Json::decodeIfJson($value);
+        }
 
         unset($value['__model__']);
 
