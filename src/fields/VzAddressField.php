@@ -87,7 +87,9 @@ class VzAddressField extends Field
             $value = Json::decodeIfJson($value);
         }
 
-        unset($value['__model__']);
+        if (isset($value['__model__'])) {
+            unset($value['__model__']);
+        }
 
         if (empty($value)) {
             return new VzAddressModel();
