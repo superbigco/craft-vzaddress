@@ -38,6 +38,8 @@ class VzAddressModel extends Model
     public $postalCode;
     public $country;
     public $countryName;
+    public $latitude;
+    public $longitude;
 
     // Public Methods
     // =========================================================================
@@ -195,17 +197,28 @@ class VzAddressModel extends Model
             $settings = VzAddress::$plugin->getSettings();
             $key      = $settings->googleApiKey;
         }
+
         if (empty($key)) {
             return 'A Google API key is required.';
         }
 
         // include the javascript api from google's cdn using our api key
         Craft::$app->getView()->includeJsFile("https://maps.googleapis.com/maps/api/js?key={$key}");
-        // geocode our address into coordinates
-        $address = $this->toArray();
-        // remove the name from the address as it throws the geocoder off
-        unset($address['name']);
-        $coords = $this->_geocodeAddress(implode($address, ' '), $key);
+
+        if(!empty($this->latitude) && !empty($this->longitude)){
+            $coords = [
+                'lat' => $this->latitude,
+                'lng' => $this->longitude,
+            ];
+        }
+        else {
+            // geocode our address into coordinates
+            $address = $this->toArray();
+            // remove the name from the address as it throws the geocoder off
+            unset($address['name']);
+            $coords = $this->_geocodeAddress(implode($address, ' '), $key);
+        }
+
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         unset($params['width']);
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
@@ -240,6 +253,41 @@ class VzAddressModel extends Model
     public function getCountryName()
     {
         return Craft::$app->getI18n()->getLocaleById($this->country)->getDisplayName();
+    }
+
+    /**
+     * Virtual Attributes
+     */
+    public function updateCoordinates(){
+        if (empty($settings->googleApiKey)) {
+            // No Google API Key Set
+            return;
+        }
+        
+        $key = $settings->googleApiKey;
+
+        // geocode our address into coordinates
+        $address = $this->toArray();
+
+        if(empty($address['street']) && empty($address['city']) && empty($address['postalCode'])){
+            $this->latitude = null;
+            $this->longitude = null;
+            return;
+        }
+        
+        // remove the name from the address as it throws the geocoder off
+        unset($address['name']);
+
+        $coords = $this->_geocodeAddress(implode($address, ' '), $key);
+
+        if($coords){
+            $this->latitude = $coords[0];
+            $this->longitude = $coords[1];
+        }
+        else {
+            $this->latitude = null;
+            $this->longitude = null;
+        }
     }
 
     /**
