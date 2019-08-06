@@ -40,6 +40,7 @@ class VzAddressModel extends Model
     public $countryName;
     public $latitude;
     public $longitude;
+    public $hash;
 
     // Public Methods
     // =========================================================================
@@ -259,8 +260,11 @@ class VzAddressModel extends Model
      * Virtual Attributes
      */
     public function updateCoordinates(){
+        $settings = VzAddress::$plugin->getSettings();
+
         if (empty($settings->googleApiKey)) {
             // No Google API Key Set
+            Craft::warning("No Google API Key Found");
             return;
         }
         
@@ -269,20 +273,32 @@ class VzAddressModel extends Model
         // geocode our address into coordinates
         $address = $this->toArray();
 
-        if(empty($address['street']) && empty($address['city']) && empty($address['postalCode'])){
+        if(empty($address['street']) && empty($address['city']) && empty($address['postalCode']))
+        {
             $this->latitude = null;
             $this->longitude = null;
             return;
         }
-        
+
         // remove the name from the address as it throws the geocoder off
         unset($address['name']);
+        
+        $searchAddress = implode($address, ' ');
+        
+        $addrHash = hash('ripemd160', $searchAddress);
 
-        $coords = $this->_geocodeAddress(implode($address, ' '), $key);
+        if($this->hash === $addrHash){
+            Craft::info("Hash is the same so don't update");
+            return;
+        }
+
+        $this->hash = $addrHash;
+
+        $coords = $this->_geocodeAddress($searchAddress, $key);
 
         if($coords){
-            $this->latitude = $coords[0];
-            $this->longitude = $coords[1];
+            $this->latitude = $coords['lat'];
+            $this->longitude = $coords['lng'];
         }
         else {
             $this->latitude = null;
@@ -307,6 +323,7 @@ class VzAddressModel extends Model
         if ($response['status'] == 'OK') {
             $lat = $response['results'][0]['geometry']['location']['lat'];
             $lng = $response['results'][0]['geometry']['location']['lng'];
+
             // verify if data is complete
             if ($lat && $lng) {
                 return [
@@ -319,6 +336,7 @@ class VzAddressModel extends Model
             }
         }
         else {
+            Craft::warning("Invalid status {$response['status']} from Google geocode for address: {$address}");
             return false;
         }
     }
