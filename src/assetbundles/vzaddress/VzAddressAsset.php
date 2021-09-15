@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2018 Superbig
  */
 
-namespace superbig\vzaddress\assetbundles\VzAddress;
+namespace superbig\vzaddress\assetbundles\vzaddress;
 
 use Craft;
 use craft\web\AssetBundle;
