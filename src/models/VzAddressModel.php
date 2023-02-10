@@ -217,7 +217,7 @@ class VzAddressModel extends Model
             $address = $this->toArray();
             // remove the name from the address as it throws the geocoder off
             unset($address['name']);
-            $coords = $this->_geocodeAddress(implode($address, ' '), $key);
+            $coords = $this->_geocodeAddress(implode(' ', $address), $key);
         }
 
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
@@ -283,7 +283,7 @@ class VzAddressModel extends Model
         // remove the name from the address as it throws the geocoder off
         unset($address['name']);
         
-        $searchAddress = implode($address, ' ');
+        $searchAddress = implode(' ', $address);
         
         $addrHash = hash('ripemd160', $searchAddress);
 
@@ -395,7 +395,7 @@ class VzAddressModel extends Model
                     $declaration[] .= "{$key}:{$value}";
                 }
             }
-            $output .= '&style=' . implode($declaration, '|');
+            $output .= '&style=' . implode('|', $declaration);
         }
 
         return $output;
