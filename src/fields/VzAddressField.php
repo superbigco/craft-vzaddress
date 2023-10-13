@@ -95,7 +95,11 @@ class VzAddressField extends Field
             return new VzAddressModel();
         }
 
-        return new VzAddressModel($value);
+        $model = new VzAddressModel($value);
+
+        $model->updateCoordinates();
+
+        return $model;
     }
 
     /**
